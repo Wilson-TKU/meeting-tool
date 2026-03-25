@@ -1,6 +1,45 @@
 # Meeting Tool 專案
 
 這是一個自動將會議錄音轉成逐字稿，並修正專有名詞、生成會議摘要的工具專案。
+- [Meeting Tool 專案](#meeting-tool-專案)
+  - [⚡ 快速開始 (Quick Start)](#-快速開始-quick-start)
+    - [1️⃣ 複製專案到本機](#1️⃣-複製專案到本機)
+    - [2️⃣ 安裝 Python 依賴](#2️⃣-安裝-python-依賴)
+    - [3️⃣ 測試 Prompt（遠端呼叫伺服器 Ollama）](#3️⃣-測試-prompt遠端呼叫伺服器-ollama)
+  - [系統架構預期 (Pipeline Architecture)](#系統架構預期-pipeline-architecture)
+  - [1. 架設 Ollama 語言模型服務](#1-架設-ollama-語言模型服務)
+    - [安裝與啟動步驟](#安裝與啟動步驟)
+  - [2. 測試會議摘要指令 (使用假資料)](#2-測試會議摘要指令-使用假資料)
+    - [執行準備](#執行準備)
+  - [3. 🧪 Prompt 工程：如何測試 Prompt](#3--prompt-工程如何測試-prompt)
+    - [步驟 A：開放主機 Ollama 外部連線 (僅主機端需要)](#步驟-a開放主機-ollama-外部連線-僅主機端需要)
+    - [步驟 B：從本機端 (CMD) 遠端測試 Prompt](#步驟-b從本機端-cmd-遠端測試-prompt)
+
+
+---
+
+## ⚡ 快速開始 (Quick Start)
+
+### 1️⃣ 複製專案到本機
+```bash
+git clone https://github.com/Wilson-TKU/meeting-tool.git
+cd meeting-tool
+```
+
+### 2️⃣ 安裝 Python 依賴
+```bash
+pip install -r requirements.txt
+```
+
+### 3️⃣ 測試 Prompt（遠端呼叫伺服器 Ollama）
+假設伺服器 IP 為 `192.168.3.190`，執行以下指令測試：
+```bash
+python test_prompt.py --host http://192.168.3.190:11434 --prompt my_prompt.txt --text test_speech.txt --output result.txt
+```
+
+✨ **完成後，結果會自動存入 `result.txt`**
+
+---
 
 ## 系統架構預期 (Pipeline Architecture)
 
