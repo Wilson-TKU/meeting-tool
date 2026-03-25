@@ -89,6 +89,7 @@ OLLAMA_HOST=0.0.0.0 ollama run llama3.2
 ```bash
 python test_prompt.py --host http://<主機的IP地址>:11434 --prompt my_prompt.txt --text test_speech.txt --output result.txt
 ```
+![alt text](doc/image.png)
 *(提示：`--output` 是選填參數。如果沒加，只會把 AI 產出的結果印在畫面上；如果有加，就會將結果存入該檔案。)*
 
 *使用者可以利用這支小工具快速發送請求，並反覆修改 prompt 文字檔來尋找最佳的提示詞組合！*
