@@ -3,10 +3,11 @@ import argparse
 import sys
 
 def main():
-    parser = argparse.ArgumentParser(description="給 Prompt 工程師的小工具：用來測試不同 Prompt 的效果")
+    parser = argparse.ArgumentParser(description="Prompt 測試小工具：用來測試不同 Prompt 對於文本生成的影響")
     parser.add_argument("--host", default="http://localhost:11434", help="Ollama 伺服器網址 (預設為 http://localhost:11434，若是遠端請填入 http://<IP>:11434)")
     parser.add_argument("--prompt", required=True, help="你的 prompt 文字檔路徑 (例如: prompts/summary_prompt.txt)")
     parser.add_argument("--text", required=True, help="你要測試的逐字稿路徑 (例如: data/1_raw_transcript.txt)")
+    parser.add_argument("--output", required=False, help="如果加上此參數，將會把結果存入指定檔案 (例如: result.txt)")
     args = parser.parse_args()
 
     # 讀取檔案
@@ -36,7 +37,16 @@ def main():
         result = response.json().get("response", "")
         
         print("================ 🤖 模型測試產出結果 ================\n")
-        print(result)
+        if args.output:
+            import os
+            output_dir = os.path.dirname(args.output)
+            if output_dir:
+                os.makedirs(output_dir, exist_ok=True)
+            with open(args.output, 'w', encoding='utf-8') as f:
+                f.write(result)
+            print(f"✅ 成功！測試結果已儲存至檔案: {args.output}")
+        else:
+            print(result)
         print("\n=====================================================")
     except Exception as e:
         print(f"❌ 連線失敗，請確認網址正確與主機端的 Ollama 是否已經開放外部連線: {e}")

@@ -9,17 +9,17 @@
 ```mermaid
 graph TD
     %% 階段一：語音辨識
-    Audio[🎵 輸入音檔\ndata/input.mp3] -->|第一階段| Whisper(module_whisper.py\n轉檔與 Whisper 語音辨識)
+    Audio[🎵 輸入音檔\ndata/input.mp3] -->|第一階段| Whisper(src/module_whisper.py\n轉檔與 Whisper 語音辨識)
     Whisper --> RawTrans[📄 初版逐字稿\ndata/1_raw_transcript.txt]
     
     %% 階段二：專有名詞修正
-    RawTrans -->|第二階段| LLM1(module_llm.py\n專有名詞修正模組)
+    RawTrans -->|第二階段| LLM1(src/module_llm.py\n專有名詞修正模組)
     Prompt1[✍️ prompts/\ncorrection_prompt.txt] --> LLM1
     Ollama[(🧠 Ollama 語言模型\ne.g. llama3.2)] <--> LLM1
     LLM1 --> CorrectedTrans[📄 修正後逐字稿\ndata/2_corrected_transcript.txt]
     
     %% 階段三：會議摘要
-    CorrectedTrans -->|第三階段| LLM2(module_llm.py\n會議摘要生成模組)
+    CorrectedTrans -->|第三階段| LLM2(src/module_llm.py\n會議摘要生成模組)
     Prompt2[✍️ prompts/\nsummary_prompt.txt] --> LLM2
     Ollama <--> LLM2
     LLM2 --> Summary[📊 最終會議摘要\ndata/3_final_summary.txt]
@@ -73,20 +73,22 @@ graph TD
 
 ## 3. 🧪 Prompt 工程：如何測試 Prompt
 
-如果你是負責優化提示詞 (Prompt) 的組員，我們準備了 `test_prompt.py` 小工具，讓你可以在自己的電腦上，直接用 CMD 呼叫伺服器平台上的 Ollama 模型來測試結果。
+專案內提供了 `test_prompt.py` 測試腳本，可以在外部電腦上直接用 CMD 呼叫伺服器平台上的 Ollama 模型來驗證 Prompt 修改的結果。
 
-### 步驟 A：開放主機 Ollama 外部連線 (僅平台主機端需要)
-預設情況下 Ollama 只允許本機 (`localhost`) 連線。如果要讓組員從外部網路連線，伺服器在啟動 Ollama 時必須加上環境變數開放所有 IP：
+### 步驟 A：開放主機 Ollama 外部連線 (僅主機端需要)
+預設情況下 Ollama 只允許本機 (`localhost`) 連線。如果需要透過外部網路連線測試，伺服器在啟動 Ollama 時必須加上環境變數以開放外部 IP：
 ```bash
 # 在 Linux 主機端啟動 Ollama 前設定
 OLLAMA_HOST=0.0.0.0 ollama run llama3.2
 ```
 
-### 步驟 B：組員從本機 (CMD) 測試 Prompt
-組員可以在自己的電腦上下載專案內的 `test_prompt.py`，並自己隨意建立你要測試的 `my_prompt.txt` 與情境假文章 `test_speech.txt`。
+### 步驟 B：從本機端 (CMD) 遠端測試 Prompt
+在任何有安裝 Python 的電腦上下載專案內的 `test_prompt.py`，並準備欲測試的 Prompt 文字檔 (例如：`my_prompt.txt`) 與模擬的輸入素材文章 (例如：`test_speech.txt`)。
 打開命令提示字元 (CMD) 或終端機，執行以下指令：
 
 ```bash
-python test_prompt.py --host http://<平台的IP地址>:11434 --prompt my_prompt.txt --text test_speech.txt
+python test_prompt.py --host http://<主機的IP地址>:11434 --prompt my_prompt.txt --text test_speech.txt --output result.txt
 ```
-*這支小程式會自動把你的 Prompt 和測試文章組合，發送給伺服器，並把 AI 產出的結果印在畫面上。團隊就可以利用這支小工具，透過反覆修改 txt 檔來找出最強的 Prompt！*
+*(提示：`--output` 是選填參數。如果沒加，只會把 AI 產出的結果印在畫面上；如果有加，就會將結果存入該檔案。)*
+
+*使用者可以利用這支小工具快速發送請求，並反覆修改 prompt 文字檔來尋找最佳的提示詞組合！*

@@ -1,6 +1,6 @@
 import os
-from module_whisper import process_audio_to_transcript
-from module_llm import fix_domain_terms, generate_meeting_summary
+from src.module_whisper import process_audio_to_transcript
+from src.module_llm import fix_domain_terms, generate_meeting_summary
 
 def main():
     print("==============================================")
